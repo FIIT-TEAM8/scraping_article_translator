@@ -1,0 +1,3 @@
+apertium==0.2.3
+apertium-streamparser==5.0.2
+pika==1.3.1
