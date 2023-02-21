@@ -4,6 +4,7 @@ import subprocess
 import json
 import pika
 import settings
+import apertium
 
 
 # code should be split to phases:
@@ -24,7 +25,10 @@ def main_callback(ch, method, properties, body):
         temp_file = open(temp_file_name, "w")
         # WORK phase - work on the article. Extract relevant tags and then extract anything that looks like a human name.
         message = json.loads(body.decode())
-        message["names"] = ["HELLO", "WORLD"]
+        
+        if message["language"] in settings.APERTIUM_SUPPORTED_LANGS:
+            translator = apertium.Translator(message["language"], "en")
+            message["text"] = translator.translate(message["text"])
         
         # now post the cleaned message further along
         serialized_message = json.dumps(message)
